@@ -1,0 +1,44 @@
+.achievement-container {
+    display: flex;
+    flex-direction: column;
+    padding: 5% 10%;
+    text-align: left;
+}
+
+.achievement-container .achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 50px;
+}
+
+.achievement-container .achievement-grid .achievement-item {
+    text-align: left;
+}
+
+.achievement-item h2 {
+    margin-bottom: 4px;
+}
+
+.achievement-item h4 {
+    font-weight: normal;
+    color: gray;
+    margin-bottom: 8px;
+}
+
+@media screen {
+    @media (max-width: 700px) {
+        .achievement-container {
+            display: block;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+
+        .achievement-container .achievement-grid {
+            display: block;
+        }
+
+        .achievement-container .achievement-grid .achievement-item {
+            padding-bottom: 5%;
+        }
+    }
+}
