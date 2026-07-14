@@ -62,6 +62,18 @@ function ProjectDetail() {
         </div>
         <p className="pd-description">{project.description}</p>
 
+        {/* 서비스 소개 영상 */}
+        {project.videoUrl && (
+          <div className="pd-video-wrapper">
+            <iframe
+              src={project.videoUrl}
+              title="서비스 소개 영상"
+              allowFullScreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            />
+          </div>
+        )}
+
         {/* 기술 스택 — Expertise 스타일 카테고리 */}
         <div className="pd-section">
           <h2>기술 스택</h2>

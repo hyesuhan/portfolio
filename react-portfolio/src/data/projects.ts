@@ -31,6 +31,7 @@ export interface Project {
   teamSize: string;
   summary: string;
   description: string;
+  videoUrl?: string;
   techCategories: TechCategory[];
   roles: RoleDetail[];
   diagrams: DiagramSection[];
@@ -47,6 +48,7 @@ const projects: Project[] = [
     summary: "주식 초보자를 위한 AI 모의투자 플랫폼",
     description:
       "실시간 주식 데이터와 AI 기업 뉴스 분석을 바탕으로 모의투자 및 포트폴리오 분석 경험을 제공하는 플랫폼입니다. 투자 경험이 부족한 초보자가 실제 자산 없이도 안전하게 투자를 경험하고 올바른 투자 습관을 형성할 수 있도록 기획되었습니다.",
+    videoUrl: "https://www.youtube.com/embed/iJDTsPv_jCs",
     techCategories: [
       {
         label: "백엔드",
