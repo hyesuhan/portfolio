@@ -1,6 +1,10 @@
 .project-detail-container {
     padding: 84px 10% 8%;
+    max-width: 1100px;
+    margin: 0 auto;
     text-align: left;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 // 헤더
@@ -31,7 +35,6 @@
     font-size: 1.05rem;
     line-height: 1.8;
     margin-bottom: 3.5rem;
-    max-width: 760px;
 }
 
 // 공통 섹션
@@ -90,6 +93,17 @@
     display: block;
     border-radius: 8px;
     border: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+// 담당 역할 간략 요약
+.pd-brief-roles {
+    padding-left: 1.2rem;
+    margin: 0;
+
+    li {
+        font-size: 1rem;
+        line-height: 2;
+    }
 }
 
 // 담당 역할 — Expertise 스킬 카드와 동일한 구조

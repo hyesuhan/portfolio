@@ -44,7 +44,7 @@ const projects: Project[] = [
     title: "모니 MONI",
     period: "2026.06 - 2026.07 (약 4주)",
     teamSize: "백엔드 6명",
-    summary: "주식 초보자를 위한 모의투자 플랫폼",
+    summary: "주식 초보자를 위한 AI 모의투자 플랫폼",
     description:
       "실시간 주식 데이터와 AI 기업 뉴스 분석을 바탕으로 모의투자 및 포트폴리오 분석 경험을 제공하는 플랫폼입니다. 투자 경험이 부족한 초보자가 실제 자산 없이도 안전하게 투자를 경험하고 올바른 투자 습관을 형성할 수 있도록 기획되었습니다.",
     techCategories: [
@@ -54,23 +54,23 @@ const projects: Project[] = [
       },
       {
         label: "데이터베이스",
-        items: ["PostgreSQL", "Redis"],
+        items: ["PostgreSQL", "Redis", "Redis cluster"],
       },
       {
         label: "인프라",
-        items: ["Docker", "Docker Compose", "S3"],
+        items: ["Docker", "Docker Compose", "S3", "ECR", "Route53", "EC2"],
       },
       {
         label: "모니터링",
-        items: ["Grafana", "Prometheus", "Loki", "Tempo", "Grafana Alloy"],
+        items: ["Grafana", "Prometheus", "Loki", "Tempo", "Grafana Alloy", "OTel"],
       },
       {
         label: "테스트",
-        items: ["K6"],
+        items: ["K6", "ManusAI"],
       },
       {
-        label: "결제",
-        items: ["Toss Payments API"],
+        label: "기타",
+        items: ["Okta", "한국투자증권 API", "Naver API", "Toss Payments API"],
       },
     ],
     roles: [
@@ -78,27 +78,27 @@ const projects: Project[] = [
         iconKey: "payment",
         title: "Payment-Service 개발",
         points: [
-          "Toss Payments 연동 구독 결제 서비스 구축 (신규 구독, 정기결제, 해지/재구독)",
-          "DDD 기반 도메인 모델 설계 — Payment/Subscription 애그리거트, Money·BillingKey 값 객체",
-          "Redis SET NX 분산 락으로 동시 중복 결제 원천 차단",
-          "Subscription @Version 낙관적 잠금으로 스케줄러-사용자 동시 수정 충돌 방지",
-          "@TransactionalEventListener(AFTER_COMMIT) 패턴으로 롤백 시 Kafka 이벤트 발행 차단",
-          "매일 09:00 정기결제 스케줄러 — 3회 실패 시 SUSPENDED 처리",
+          "Toss Payments 연동 구독 결제 서비스 구축 (구독, 정기결제, 해지/재구독)",
+          "DDD 기반 도메인 모델 설계(Payment, Subscription)",
+          "Redis SET NX 분산 락으로 동시 중복 결제 제어",
+          "구독 시 @Version (낙관적 락)으로 스케줄러 수행 : 사용자 동시 결제 동시성 이슈 해결",
+          "@TransactionalEventListener(AFTER_COMMIT) 패턴으로 Rollback 시 Kafka 이벤트 발행 차단",
+          "매일 09:00 정기결제 스케줄러. 단, 3회 실패 시 SUSPENDED 처리(잔액 부족)",
           "Flyway V1~V4 마이그레이션, Partial Index로 스케줄러 쿼리 최적화",
         ],
         troubleshooting: [
           {
-            issue: "외부 API 호출 중 DB 커넥션 점유",
+            issue: "[커넥션 풀 고갈 이슈] 외부 API 호출 중 DB 커넥션 점유 최대 13초 예상, 10명 이상 동시 결제 불가능",
             solution:
-              "PaymentCommandService를 REQUIRES_NEW 트랜잭션으로 분리. 결제 기록 저장 → 커밋 → 커넥션 반납 → Toss API 호출 순서로 커넥션 풀 고갈 방지",
+              "결제 처리 로직을 REQUIRES_NEW 트랜잭션으로 분리. 결제 기록 저장, 커밋, 커넥션 반납, Toss API 호출 순으로 커넥션 풀 고갈 방지, Saga 및 보상 트랜잭션 패턴 도입",
           },
           {
-            issue: "더블 클릭/재시도로 인한 중복 결제",
+            issue: "[동시성 이슈] 더블 클릭/재시도로 인한 중복 결제",
             solution:
               "Redis 분산 락(1차)과 MerchantId 멱등성 키(2차) 이중 방어로 PG 중복 청구 차단",
           },
           {
-            issue: "이벤트 발행 타이밍 — 롤백 후에도 이벤트 처리 시작",
+            issue: "[이벤트 발행 이슈] 결제 후 구독 이벤트 발행 Transaction 에서 Rollback 후에도 이벤트 발생되는 이슈",
             solution:
               "@TransactionalEventListener(phase = AFTER_COMMIT) 적용 — DB 커밋 완료 이후에만 리스너 실행, 롤백 시 리스너 미실행 보장",
           },
@@ -110,13 +110,13 @@ const projects: Project[] = [
         points: [
           "SSE(Server-Sent Events) 기반 실시간 알림 서버 푸시 구현",
           "한국 주식시장 오픈/마감 5분 전 스케줄러 알림 (평일 08:55, 15:25)",
-          "CompletableFuture.runAsync() 비동기 발송으로 단일 사용자 실패가 전체 발송에 영향 없도록 처리",
+          "비동기 발송으로 단일 사용자 실패가 전체 발송에 영향 없도록 처리",
           "Last-Event-ID 헤더 기반 재연결 시 이벤트 유실 방지",
           "UUID v7(시간순 정렬) 적용으로 알림 테이블 B-Tree 페이지 분할 최소화",
         ],
         troubleshooting: [
           {
-            issue: "SSE 재연결 시 이벤트 유실",
+            issue: "[알람 이벤트 이슈] SSE 재연결 시 이벤트 유실",
             solution:
               "발송 이벤트를 userId_timestamp 키로 캐시 저장, Last-Event-ID 헤더 수신 시 해당 ID 이후 이벤트만 즉시 재전송",
           },
@@ -126,28 +126,27 @@ const projects: Project[] = [
         iconKey: "monitoring",
         title: "모니터링 서버 구축 (Grafana Observability Stack)",
         points: [
-          "AWS private subnet 내 monitor-ec2에 Grafana / Prometheus / Loki / Tempo / Alloy 전체 스택 설계·구현",
-          "Alloy Eureka Service Discovery — 신규 서비스 등록 시 Prometheus 스크랩 타겟 자동 반영",
-          "Agent/Gateway 패턴 분리 — service-ec2 사이드카(로그 tail + 메트릭 scrape) / monitor-ec2 게이트웨이(node-exporter 3대, postgres-exporter 7개)",
+          "AWS private subnet 내 monitor-ec2에 Grafana / Prometheus / Loki / Tempo 전체 스택 설계·구현",
+          "MSA에 맞게 Eureka Server 을 통해 신규 서비스 등록 시 Prometheus 스크랩 타겟 자동 반영",
+          "Agent/Gateway 패턴 분리 : service-ec2 사이드카(로그 tail + 메트릭 scrape) / monitor-ec2 게이트웨이(node-exporter 3대, postgres-exporter 7개)",
           "Tempo S3 백엔드로 분산 추적 저장, 샘플링 5% 설정",
           "Alertmanager Discord 분기 라우팅 — critical/warning 채널 분리, DiskSpaceWarning(30%) 선제 경보",
-          "IAM Instance Profile 기반 S3 자격증명으로 평문 키 노출 제거",
         ],
         troubleshooting: [
           {
-            issue: "Grafana up 메트릭 전부 0 (expose vs ports)",
+            issue: "[기술 스택 의사결정] Promtail vs Alloy",
             solution:
-              "service-ec2 management port가 expose(내부 전용)로 선언되어 monitor-ec2에서 TCP 접근 불가. 포트 노출 없이 사이드카 Alloy가 Docker 내부 IP로 scrape → remote_write하는 방식으로 해결",
+              "로그 파일 실시간 감지를 위한 기존 Promtail 은 EOL 대상이기에 공식 문서에 따라 Alloy 로 마이그레이션",
           },
           {
-            issue: "Loki 로그 유실 (디스크 풀 + 파일 핸들)",
+            issue: "[로그 유실 이슈] 제한된 EC2 용량으로 디스크가 다 찰 경우 로그가 유실되는 문제 발생",
             solution:
-              "로그 로테이션 미적용으로 디스크 99% → Alloy WAL 쓰기 실패. Alloy 컨테이너 kill로 파일 핸들 해제 후 로그 삭제, DiskSpaceWarning 알림 추가로 재발 방지",
+              "로컬 ec2 에 저장되는 로그들은 7일이 지나면 자동 삭제, 대신 해당 로그들을 s3 로 저장해 약 3개월 유지하며 유실 문제 해결",
           },
           {
-            issue: "Docker Compose ports 병합 충돌",
+            issue: "[보안 이슈] 로그 저장용 S3 의 자격증명을 docker inspect 로 확인 가능한 이슈",
             solution:
-              "ports 필드는 override 시 대체가 아닌 추가(concat). base 파일에서 환경변수 기반 ${HOST}:${PORT}:9090 패턴으로 변경",
+              "S3 접근 시 monitor-ec2 IAM Instance Profile 로 자동 자격증명을 통해 최소 권한 부여",
           },
         ],
       },
@@ -180,10 +179,10 @@ const projects: Project[] = [
     id: "dear-dream",
     title: "이어드림",
     period: "2025.05 - 2025.09 (4개월)",
-    teamSize: "8인팀 (기획 2, 디자인 2, 프론트 2, 백엔드 2) · 백엔드 팀장",
-    summary: "가족의 한 달을 한 권의 책으로 — 월간 가족 책자 서비스",
+    teamSize: "8인팀 (기획 2, 디자인 2, 프론트 2, 백엔드 2) | 백엔드 팀장 및 와디즈 기획, 디자인 담당",
+    summary: "멀리 떨어진 부모님을 위한 우리 가족 월간 책자 서비스",
     description:
-      "가족들이 한 달 동안 작성한 글과 사진을 모아 매월 한 권의 책으로 제작·발송하는 구독형 서비스입니다. 와디즈 크라우드 펀딩 140% 달성, 용인·은평·서대문구 PoC를 통한 실증 및 사용자 리서치를 진행했습니다. 백엔드 팀장으로서 결제 시스템, PDF 자동화, 인증 구조를 설계·구현했습니다.",
+      "가족들이 한 달 동안 작성한 글과 사진을 모아 매월 한 권의 책으로 제작, 발송하는 구독형 서비스입니다. 와디즈 크라우드 펀딩 140% 달성, 용인·은평·서대문구 PoC를 통한 실증 및 사용자 리서치를 진행했습니다. 백엔드 팀장으로서 결제 시스템, PDF 자동화, 인증 구조를 설계, 구현 그리고 유지보수 했습니다.",
     techCategories: [
       {
         label: "백엔드",
@@ -191,7 +190,7 @@ const projects: Project[] = [
       },
       {
         label: "인프라",
-        items: ["S3", "CloudFront"],
+        items: ["S3", "CloudFront", "Ngix", "EC2", "Github Actions"],
       },
     ],
     roles: [
@@ -200,21 +199,21 @@ const projects: Project[] = [
         title: "정기 구독 결제 시스템 구현",
         points: [
           "카카오페이 API 연동 구독 결제/취소/환불 시스템 구축",
-          "결제 상태 PENDING → CONFIRMED → CANCELLED 생명주기 관리",
+          "결제 상태 머신으로 생명주기 관리",
           "DDD 도입으로 결제·가족 도메인 간 연관관계 제거, 독립적 생명주기 설계",
           "CleanUp Interceptor로 결제 미완료 PENDING 데이터 요청 종료 시점 자동 정리",
           "결제 완료 이벤트 기반 Leader 권한 승격 로직 분리",
           "환경별(dev/staging/prod) 로그 레벨 분리 및 SLF4J+Logback 구조화 로그 포맷 적용",
-          "운영 환경 로그 S3 적재 — 날짜·서비스별 prefix로 이슈 발생 시점 로그 즉시 조회 체계 구축",
+          "운영 환경 로그 S3 적재, 날짜,서비스별 prefix로 이슈 발생 시점 로그 즉시 조회 체계 구축",
         ],
         troubleshooting: [
           {
-            issue: "결제 이탈 시 가족 Entity 비정상 상태 누적 및 Rollback 책임 주체 불명확",
-            solution: "DDD로 결제·가족 도메인 분리 + CleanUp Interceptor + 이벤트 기반 권한 승격 로직 분리",
+            issue: "[Orphan Entity 이슈] 결제 이탈 시 가족 Entity 비정상 상태 누적 및 Rollback 책임 주체 불명확",
+            solution: "DDD로 결제·가족 도메인 분리 후 CleanUp Interceptor와 이벤트 기반 권한 승격 로직 분리",
           },
           {
             issue: "로그 분산으로 장애 원인 파악에 평균 2일 소요",
-            solution: "환경별 로그 분리 + S3 주기적 적재 체계 구축 → 장애 대응 2일 → 3시간으로 90% 단축",
+            solution: "환경별 로그 분리, S3 주기적 적재 체계 구축 → 장애 대응 2일에서 3시간으로 90% 단축",
           },
         ],
       },
@@ -229,7 +228,7 @@ const projects: Project[] = [
         ],
         troubleshooting: [
           {
-            issue: "PDF 동기 생성으로 응답 Blocking + S3 Public 노출 보안 취약점 + 중복 S3 요청 비용 누적",
+            issue: "PDF 동기 생성으로 응답 Blocking 및 S3 Public 노출 보안 취약점, 중복 S3 요청 비용 누적",
             solution: "비동기 파이프라인 + CloudFront+S3 OAI + CDN 캐싱 → 응답 시간 23% 개선, S3 트래픽 40% 절감",
           },
         ],
@@ -246,7 +245,7 @@ const projects: Project[] = [
         ],
         troubleshooting: [
           {
-            issue: "소셜 추가 시마다 기존 인증 로직 전체 수정 필요 — OCP 위반, Class 책임 비대화",
+            issue: "[OCP 위반 이슈] 소셜 추가 시마다 기존 인증 로직 전체 수정 필요(OCP 위반, Class 책임 비대화)",
             solution: "전략 패턴 적용으로 소셜 클래스 1개만 추가하면 기존 코드 수정 없이 확장 가능한 구조로 전환",
           },
         ],
@@ -263,9 +262,9 @@ const projects: Project[] = [
     title: "투둥이",
     period: "2025.05 - 2025.09 (4개월)",
     teamSize: "백엔드 2명 (졸업 프로젝트)",
-    summary: "AI 사진 인증 기반 Todo 습관 형성 플랫폼",
+    summary: "AI 인증 기반 Todo 습관 관리 플랫폼",
     description:
-      "할 일을 완료한 뒤 사진으로 인증하는 방식의 습관 형성 플랫폼입니다. Google Vision API 기반 가중치 알고리즘으로 이미지의 의미적 연관성을 판단해 오탐지율을 50%에서 5%로 낮췄습니다. 2인 백엔드 팀이 API 설계부터 인프라 배포, 프론트엔드 구축까지 전 영역을 담당한 졸업 프로젝트입니다.",
+      "할 일을 완료한 뒤 사진으로 인증하는 방식의 습관 관리 플랫폼입니다. 2인 백엔드 팀이 API 설계부터 인프라 배포, 프론트엔드 구축까지 전 영역을 담당한 졸업 프로젝트입니다.",
     techCategories: [
       {
         label: "백엔드",
@@ -273,7 +272,7 @@ const projects: Project[] = [
       },
       {
         label: "인프라",
-        items: ["Docker", "Nginx", "Terraform", "GitHub Actions"],
+        items: ["Docker", "Nginx", "Terraform", "GitHub Actions", "EC2"],
       },
       {
         label: "프론트엔드",
@@ -285,7 +284,7 @@ const projects: Project[] = [
         iconKey: "api",
         title: "API 설계 및 가중치 기반 인증 알고리즘 개발",
         points: [
-          "유저 및 전체 기본 API 설계 및 구현",
+          "전체 기본 API 설계 및 구현(로그인/회원가입, TODO 생성/삭제, 친구맺기, 결제, 등)",
           "Todo 완료 인증을 위한 사진 업로드 파이프라인 구축",
           "Google Vision API 반환값을 카테고리·텍스트·라벨 세 분류로 가중치 부여",
           "일치·유사·무관 가중치 합산 기반 임계값 검증 구조 설계",
@@ -356,7 +355,7 @@ const projects: Project[] = [
       },
       {
         label: "인프라",
-        items: ["Docker"],
+        items: ["Docker", "Docker-Compose"],
       },
     ],
     roles: [
@@ -365,14 +364,14 @@ const projects: Project[] = [
         title: "주문 조회 성능 최적화",
         points: [
           "10만 건 데이터 기준 최대 200VU 환경에서 성능 병목 분석",
-          "커넥션 풀 10 → 20으로 조정, BatchSize 100 적용으로 N+1 쿼리 해소",
+          "커넥션 풀 10 → 20으로 조정, BatchSize 40 적용으로 N+1 쿼리 해소",
           "특정 ROLE 조회 시 1~3 페이지 Redis 캐싱 적용으로 DB 풀 스캔 제거",
           "비즈니스 협의를 통한 주문 상세 내역 필드 제거로 응답 최소화",
         ],
         troubleshooting: [
           {
-            issue: "에러율 5.77%, p95 응답시간 3,920ms — 구글 제시 기준치 미달",
-            solution: "커넥션 풀 확장 + BatchSize + Redis 캐싱 → 에러율 0.00%, p95 60% 개선 (918ms → 368ms), 요청 당 쿼리 11건 → 2건",
+            issue: "[응답 시간 이슈] 에러율 5.77%, p95 응답시간 3,920ms (google 의 4-golden-signals 미달)",
+            solution: "커넥션 풀 확장(10->20), BatchSize, Redis 캐싱 을 통해 에러율 0.00%, p95 60% 개선 (918ms → 368ms), 요청 당 쿼리 11건 → 2건으로 감소",
           },
         ],
       },
@@ -382,13 +381,13 @@ const projects: Project[] = [
         points: [
           "DB 저장 전 애플리케이션 레벨에서 주문 식별자 발급 후 MDC 저장 및 로깅 스레드 추적 활성화",
           "CQRS 적용으로 쓰기 구간에만 트랜잭션 처리, 커넥션 점유 시간 최소화",
-          "2PC 기반 명시적 보상 로직 구현",
+          "2PC 기반 명시적 보상 트랜잭션 구현",
           "재고 차감 타임아웃 시나리오 대비 멱등키 제공 및 SAGA 패턴 적용",
         ],
         troubleshooting: [
           {
-            issue: "단일 트랜잭션 내 외부 API 동기 호출로 커넥션·스레드 풀 고갈 위험 및 분산 롤백 불가",
-            solution: "CQRS로 트랜잭션 범위 최소화 + SAGA 패턴 + 멱등키로 중복 요청 식별 → Throughput 개선 및 데이터 정합성 보장",
+            issue: "[타임아웃 이슈] 단일 트랜잭션 내 외부 API 동기 호출로 커넥션·스레드 풀 고갈 위험 및 분산 롤백 불가",
+            solution: "CQRS로 트랜잭션 범위 최소화, SAGA 패턴, 멱등키로 중복 요청 식별 → Throughput 개선 및 데이터 정합성 보장",
           },
         ],
       },

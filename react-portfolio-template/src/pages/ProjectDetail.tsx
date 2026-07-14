@@ -29,6 +29,10 @@ function ProjectDetail() {
   const { mode, toggleMode } = useMode();
   const project = projects.find((p) => p.id === id);
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   if (!project) {
     return (
       <div className={`main-container ${mode === "dark" ? "dark-mode" : "light-mode"}`}>
@@ -75,6 +79,16 @@ function ProjectDetail() {
           </div>
         </div>
 
+        {/* 담당 역할 — 간략 요약 */}
+        <div className="pd-section">
+          <h2>담당 역할</h2>
+          <ul className="pd-brief-roles">
+            {project.roles.map((role, i) => (
+              <li key={i}>{role.title}</li>
+            ))}
+          </ul>
+        </div>
+
         {/* 아키텍처 & 다이어그램 */}
         {project.diagrams.length > 0 && <div className="pd-section">
           <h2>아키텍처 & 다이어그램</h2>
@@ -87,9 +101,9 @@ function ProjectDetail() {
           ))}
         </div>}
 
-        {/* 담당 역할 — Expertise 스킬 카드 스타일 */}
+        {/* 문제 해결 과정 */}
         <div className="pd-section">
-          <h2>담당 역할</h2>
+          <h2>문제 해결 과정</h2>
           <div className="pd-roles-grid">
             {project.roles.map((role, i) => (
               <div key={i} className="pd-role-card">
