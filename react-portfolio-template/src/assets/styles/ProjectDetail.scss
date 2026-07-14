@@ -1,0 +1,269 @@
+.project-detail-container {
+    padding: 84px 10% 8%;
+    text-align: left;
+}
+
+// 헤더
+.pd-thumbnail {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    object-fit: cover;
+}
+
+.pd-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.pd-meta {
+    font-size: 0.95rem;
+    margin-bottom: 1.4rem;
+    opacity: 0.6;
+}
+
+.pd-meta-divider {
+    margin: 0 0.6rem;
+}
+
+.pd-description {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 3.5rem;
+    max-width: 760px;
+}
+
+// 공통 섹션
+.pd-section {
+    margin-bottom: 4rem;
+
+    > h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 1.6rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 2px solid #5000ca;
+    }
+}
+
+// 기술 스택
+.pd-tech-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.pd-tech-category {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.pd-tech-label {
+    min-width: 80px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding-top: 3px;
+    flex-shrink: 0;
+}
+
+// 다이어그램
+.pd-diagram-block {
+    margin-bottom: 2.8rem;
+
+    h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+    }
+}
+
+.pd-diagram-desc {
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    opacity: 0.6;
+}
+
+.pd-diagram-img {
+    width: 50%;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+// 담당 역할 — Expertise 스킬 카드와 동일한 구조
+.pd-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 40px;
+}
+
+.pd-role-card {
+    text-align: left;
+
+    // Expertise.scss의 .skill 과 동일한 아이콘 색상
+    svg {
+        color: white;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-top: 1rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+.pd-role-points {
+    padding-left: 1.2rem;
+    margin-bottom: 1.2rem;
+
+    li {
+        font-size: 0.9rem;
+        line-height: 1.8;
+    }
+}
+
+// 트러블슈팅 — Toss 스타일 카드
+.pd-ts-block {
+    margin-top: 1.2rem;
+}
+
+.pd-ts-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    margin-bottom: 0.7rem;
+}
+
+.pd-ts-card {
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+
+    &:last-child { margin-bottom: 0; }
+}
+
+.pd-ts-issue-row,
+.pd-ts-solution-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.pd-ts-badge {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-top: 2px;
+    background-color: rgba(255, 80, 80, 0.15);
+    color: #ff5050 !important;
+
+    &--solve {
+        background-color: rgba(0, 180, 100, 0.15);
+        color: #00b464 !important;
+    }
+}
+
+.pd-ts-issue {
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.pd-ts-solution {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.85;
+}
+
+// GitHub
+.pd-github-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pd-github-button {
+    text-transform: none !important;
+}
+
+// 다크 모드
+.dark-mode {
+    .pd-tech-label {
+        color: white !important;
+    }
+
+    .pd-github-button {
+        color: white !important;
+        border-color: white !important;
+    }
+
+    .pd-ts-card {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+}
+
+// 라이트 모드
+.light-mode {
+    .pd-tech-label {
+        color: #0d1116 !important;
+    }
+
+    .pd-github-button {
+        color: #0d1116 !important;
+        border-color: #0d1116 !important;
+    }
+
+    .pd-role-card svg {
+        color: #0d1116;
+    }
+
+    .pd-ts-card {
+        background-color: #f5f5f7;
+    }
+
+    .pd-diagram-img {
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .pd-roles-grid {
+        grid-template-columns: 1fr;
+        grid-gap: 2rem;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .project-detail-container {
+        padding: 80px 5% 10%;
+    }
+
+    .pd-title {
+        font-size: 1.7rem;
+    }
+
+    .pd-tech-category {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .pd-tech-label {
+        min-width: unset;
+    }
+
+    .pd-diagram-img {
+        width: 100%;
+    }
+}

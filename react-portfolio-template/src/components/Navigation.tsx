@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import List from '@mui/material/List';
 import ListIcon from '@mui/icons-material/List';
 import ListItem from '@mui/material/ListItem';
@@ -17,9 +18,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 
 const drawerWidth = 240;
-const navItems = [['기술', 'expertise'], ['프로젝트', 'projects'], ['수상 및 학력', 'achievement'], ['연락처', 'contact']];
+const navItems = [['기술', 'expertise'], ['프로젝트', 'projects'], ['수상 및 학력', 'achievement']];
 
-function Navigation({parentToChild, modeChange}: any) {
+function Navigation({parentToChild, modeChange, backButton, onBack}: any) {
 
   const {mode} = parentToChild;
 
@@ -91,6 +92,15 @@ function Navigation({parentToChild, modeChange}: any) {
             <LightModeIcon onClick={() => modeChange()}/>
           ) : (
             <DarkModeIcon onClick={() => modeChange()}/>
+          )}
+          {backButton && (
+            <Button
+              startIcon={<ArrowBackIcon />}
+              onClick={onBack}
+              sx={{ ml: 1, textTransform: 'none', fontSize: '1rem' }}
+            >
+              돌아가기
+            </Button>
           )}
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (

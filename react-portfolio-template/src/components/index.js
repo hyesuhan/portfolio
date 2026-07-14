@@ -4,4 +4,3 @@ export { default as Main } from "./Main";
 export { default as Expertise } from "./Expertise";
 export { default as Achievement } from "./Achievement";
 export { default as Project } from "./Project";
-export { default as Contact } from "./Contact";
