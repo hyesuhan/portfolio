@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/portfolio/static/css/main.b2c96c71.css",
+    "main.js": "/portfolio/static/js/main.6eb0d236.js",
+    "static/js/453.b05d8aa5.chunk.js": "/portfolio/static/js/453.b05d8aa5.chunk.js",
+    "static/media/moni-project.png": "/portfolio/static/media/moni-project.9fe87565aecdadfab07a.png",
+    "static/media/dear-dream-project.png": "/portfolio/static/media/dear-dream-project.c4e9db62eaf7d5db80bd.png",
+    "static/media/모니-인프라.png": "/portfolio/static/media/모니-인프라.3f049494145af39e612b.png",
+    "static/media/bg-light.png": "/portfolio/static/media/bg-light.bac0efb485244a522981.png",
+    "static/media/모니-erd.png": "/portfolio/static/media/모니-erd.e9b1c14cd502cdad9eba.png",
+    "static/media/todoing-project.png": "/portfolio/static/media/todoing-project.cdbd068c480f8086d13d.png",
+    "static/media/bg-dark.png": "/portfolio/static/media/bg-dark.f420c6b8458af72de935.png",
+    "static/media/모니-구독.png": "/portfolio/static/media/모니-구독.99bb275906e2de57275d.png",
+    "static/media/hyesu-profile.png": "/portfolio/static/media/hyesu-profile.df36e83dec75851a5d2d.png",
+    "static/media/boxoffice-project.png": "/portfolio/static/media/boxoffice-project.11a7f33a289021ce0ea1.png",
+    "index.html": "/portfolio/index.html",
+    "main.b2c96c71.css.map": "/portfolio/static/css/main.b2c96c71.css.map",
+    "main.6eb0d236.js.map": "/portfolio/static/js/main.6eb0d236.js.map",
+    "453.b05d8aa5.chunk.js.map": "/portfolio/static/js/453.b05d8aa5.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b2c96c71.css",
+    "static/js/main.6eb0d236.js"
+  ]
+}
